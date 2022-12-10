@@ -1,0 +1,22 @@
+{
+  "name": "reschedule-us-visa",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "keywords": [
+    "node",
+    "puppeteer"
+  ],
+  "author": "Vahe Grigoryan",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "audic": "^3.0.1",
+    "dotenv": "^16.0.3",
+    "moment": "^2.29.4",
+    "puppeteer": "^19.4.0"
+  }
+}
