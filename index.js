@@ -27,7 +27,7 @@ async function initSession() {
   browser = await pt.launch({headless: config.runInBackground});
   page = await browser.newPage();
   await page.setViewport({width: 1366, height: 768});
-  await page.goto(process.env.LOGIN_URL, {waitUntil: 'networkidle2'});
+  await page.goto(config.loginURL, {waitUntil: 'networkidle2'});
 }
 
 async function login() {
@@ -114,10 +114,10 @@ function formatDate(date) {
 function loadConfig() {
   dotenv.config();
   config = {
-    loginURL: process.env.LOGIN_URL,
     email: process.env.EMAIL,
     password: process.env.PASSWORD,
     registeredDate: process.env.REGISTERED_DATE,
+    loginURL: process.env.LOGIN_URL || 'https://ais.usvisa-info.com/en-ca/niv/users/sign_in',
     retryInterval: process.env.RETRY_INTERVAL || 10, // minutes
     runInBackground: process.env.RUN_IN_BACKGROUND === 'true',
   }
