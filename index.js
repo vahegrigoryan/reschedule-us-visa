@@ -19,7 +19,8 @@ async function runSession() {
   } catch (error) {
     log(`ERROR: ${error.message || error}`);
     await browser.close();
-    retry();
+    const interval = calculateRetryInterval();
+    retry(interval);
   }
 }
 
@@ -93,14 +94,20 @@ async function winOrRetry(dateObj) {
       await ALARM.play();
     });
   } else {
-    log(`The next available date ${formattedDate} is not earlier than the current, will retry in ${config.retryInterval} minutes`);
+    const interval = calculateRetryInterval();
+    log(`The next available date ${formattedDate} is not earlier than the current, will retry in ${Math.round(interval / 1000)} seconds`);
     await browser.close();
-    retry();
+    retry(interval);
   }
 }
 
-function retry() {
-  setTimeout(runSession, config.retryInterval * 60 * 1000);
+function calculateRetryInterval() {
+  const retryAfter = config.retryInterval - 1 + Math.random() * 2;
+  return Math.round(retryAfter * 60 * 1000);
+}
+
+function retry(interval) {
+  setTimeout(runSession, interval);
 }
 
 async function sleep(milliseconds) {
