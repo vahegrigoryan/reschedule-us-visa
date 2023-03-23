@@ -1,10 +1,11 @@
 import * as dotenv from 'dotenv'
 import * as pt from 'puppeteer';
 import moment from "moment";
-import Audic from 'audic';
+import Sound from "play-sound";
 
 let config, browser, page;
-const ALARM = new Audic('alarm.mp3');
+const ALARM_SOUND_PATH = './alarm.mp3';
+const Alarm = Sound();
 
 async function runSession() {
   try {
@@ -88,17 +89,20 @@ async function winOrRetry(dateObj) {
   const formattedDate = formatDate(dateObj);
   if (moment(config.registeredDate).diff(moment(formattedDate), 'day') > 0) {
     log(`!!!FOUND A BETTER DATE!!! ${formattedDate} HURRY UP!!!!`);
-    await ALARM.play();
-    ALARM.addEventListener('ended', async () => {
-      ALARM.currentTime = 0;
-      await ALARM.play();
-    });
+    playAlarmSound();
   } else {
     const interval = calculateRetryInterval();
     log(`The next available date ${formattedDate} is not earlier than the current, will retry in ${Math.round(interval / 1000)} seconds`);
     await browser.close();
     retry(interval);
   }
+}
+
+function playAlarmSound() {
+  Alarm.play(ALARM_SOUND_PATH, err => {
+    if (err) throw err;
+    playAlarmSound();
+  });
 }
 
 function calculateRetryInterval() {

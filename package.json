@@ -14,9 +14,9 @@
   "license": "ISC",
   "type": "module",
   "dependencies": {
-    "audic": "^3.0.1",
     "dotenv": "^16.0.3",
     "moment": "^2.29.4",
+    "play-sound": "^1.1.5",
     "puppeteer": "^19.4.0"
   }
 }
