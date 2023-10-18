@@ -55,8 +55,24 @@ async function goToRescheduleScreen() {
   await sleep(1000);
   await rescheduleButton.click();
   await sleep(1000);
-  const rescheduleLink = await page.$x("//a[contains(text(), 'Reschedule Appointment')]");
+  const rescheduleLink = await page.$x(`//a[contains(text(), '${getRescheduleButtonText()}')]`);
   await rescheduleLink[0].click();
+  if (config.hasMultipleApplicants) {
+    const continueButton = await page.waitForSelector('input[type="submit"]');
+    await sleep(1000);
+    await continueButton.click();
+  }
+}
+
+function getRescheduleButtonText() {
+  switch (config.language) {
+    case 'en_US':
+      return 'Reschedule Appointment';
+    case 'hy_AM':
+      return 'Հարցազրույցի համար վերստին';
+    default:
+      return 'Reschedule Appointment';
+  }
 }
 
 async function openDatePicker() {
@@ -131,6 +147,8 @@ function loadConfig() {
     loginURL: process.env.LOGIN_URL || 'https://ais.usvisa-info.com/en-ca/niv/users/sign_in',
     retryInterval: process.env.RETRY_INTERVAL || 10, // minutes
     runInBackground: process.env.RUN_IN_BACKGROUND === 'true',
+    hasMultipleApplicants: process.env.HAS_MULTIPLE_APPLICANTS === 'true',
+    language: process.env.LANGUAGE || 'en_US',
   }
   log(config.runInBackground);
 }
